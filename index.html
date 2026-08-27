@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alron — Le portail numérique de l'enseignant</title>
-<meta name="description" content="Alron : gestion de classe, évaluations, appréciations assistées par IA, cahier de texte, générateurs d'exercices et jeux pédagogiques — 100% hors-ligne, données 100% locales.">
+<meta name="description" content="Alron : gestion de classe, évaluations, appréciations assistées par IA, cahier de texte, générateurs d'exercices et jeux pédagogiques — connexion Internet non nécessaire, données 100% locales.">
 <link rel="icon" href="logo-alron.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,9 @@
   .hero{position:relative;background:radial-gradient(circle at 50% 15%,var(--navy-light) 0%,var(--navy) 45%,#081527 100%);overflow:hidden;padding:96px 24px 120px;text-align:center;}
   .hero::before{content:"";position:absolute;top:-10%;left:50%;width:640px;height:640px;transform:translateX(-50%);background:radial-gradient(circle,rgba(0,198,167,.35) 0%,rgba(26,92,255,.18) 40%,transparent 70%);filter:blur(30px);animation:pulse 7s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:.7;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.08);}}
-  .hero-inner{position:relative;max-width:720px;margin:0 auto;}
+  #constellation-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;}
+  .hero-inner{position:relative;z-index:2;max-width:720px;margin:0 auto;}
+  @media (prefers-reduced-motion:reduce){#constellation-canvas{display:none;}}
   .hero-logo{width:104px;height:104px;margin:0 auto 28px;border-radius:26px;box-shadow:0 0 60px rgba(0,198,167,.45),0 20px 50px rgba(0,0,0,.4);}
   .hero h1{color:#fff;font-size:44px;line-height:1.18;margin-bottom:18px;}
   .hero h1 em{font-style:italic;color:var(--accent);}
@@ -105,7 +107,9 @@
   .divider svg{opacity:.5;}
 
   .notice{background:var(--white);}
-  .notice-box{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:var(--radius);padding:44px;display:flex;align-items:center;gap:32px;color:#fff;flex-wrap:wrap;}
+  .notice-box{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:var(--radius);padding:44px;display:flex;align-items:center;gap:32px;color:#fff;flex-wrap:wrap;}
+  .notice-box canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+  .notice-box .doc-ic,.notice-box .txt,.notice-box>a{position:relative;z-index:1;}
   .notice-box .doc-ic{width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
   .notice-box .txt{flex:1;min-width:240px;}
   .notice-box h3{font-family:var(--font-display);font-size:22px;margin-bottom:8px;}
@@ -116,10 +120,13 @@
   .dl-card{background:#fff;border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);}
   .dl-card h3{font-family:var(--font-body);font-weight:700;font-size:16px;color:var(--navy);margin-bottom:6px;}
   .dl-card p{color:var(--text-mid);font-size:14px;margin:0 0 20px;}
+  .smartscreen-warning{font-style:italic;color:#C0362C;font-size:13px;line-height:1.6;background:#FDECEA;border-left:3px solid #C0362C;border-radius:4px;padding:12px 14px;margin:0 0 20px;}
   .dl-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
   .tag{font-size:11.5px;font-weight:700;color:var(--text-mid);background:var(--surface);border:1px solid var(--border);padding:4px 10px;border-radius:999px;}
 
-  .support{background:var(--navy);color:#fff;text-align:center;}
+  .support{position:relative;overflow:hidden;background:var(--navy);color:#fff;text-align:center;}
+  .support canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+  .support .wrap{position:relative;z-index:1;}
   .support h2{color:#fff;font-size:30px;margin-bottom:14px;}
   .support p{color:#B9C7E0;max-width:520px;margin:0 auto 30px;font-size:15px;}
 
@@ -172,12 +179,13 @@
 </header>
 
 <section class="hero" id="top">
+  <canvas id="constellation-canvas"></canvas>
   <div class="hero-inner">
     <img src="logo-alron.png" alt="Logo Alron" class="hero-logo">
     <h1>Le portail numérique qui <em>allège</em> le quotidien de l'enseignant</h1>
     <p class="lead">Classes, évaluations, cahier de texte, appréciations et exercices : Alron tient sur une clé USB, sans jamais transmettre vos données.</p>
     <div class="hero-badges">
-      <span class="badge">🔒 100% hors-ligne</span>
+      <span class="badge">🌐 Internet non nécessaire</span>
       <span class="badge">🇫🇷 Conforme RGPD</span>
       <span class="badge">💾 Portable, sans installation</span>
     </div>
@@ -311,6 +319,7 @@
       <p>Prise en main, description des modules et réponses aux questions fréquentes.</p>
     </div>
     <div class="notice-box reveal">
+      <canvas id="notice-canvas"></canvas>
       <div class="doc-ic">📘</div>
       <div class="txt">
         <h3>Notice d'utilisation d'Alron</h3>
@@ -335,9 +344,8 @@
           <span class="tag">Windows 10 / 11 · 64 bits</span>
           <span class="tag">Portable</span>
         </div>
-        <p>Décompressez l'archive et lancez l'exécutable directement depuis votre clé USB. Un dossier de données est créé automatiquement à côté de l'application. 
-Comme l'application est gratuite, elle est non signée numériquement (sans certificat d'éditeur) ce qui déclenche immédiatement les protections intégrées de Windows lors du téléchargement ou de l'exécution : « SmartScreen Windows Defender a empêché le démarrage d'une application non reconnue. L'exécution de cette application peut mettre votre ordinateur en danger. »
-Pour l'ouvrir, vous devez obligatoirement cliquer sur « Informations complémentaires » puis sur le bouton « Exécuter quand même » qui apparaît. </p>
+        <p>Décompressez l'archive et lancez l'exécutable directement depuis votre clé USB. Un dossier de données est créé automatiquement à côté de l'application.</p>
+        <p class="smartscreen-warning"><strong>⚠ Attention :</strong> comme l'application est gratuite, elle est non signée numériquement (sans certificat d'éditeur), ce qui déclenche immédiatement les protections intégrées de Windows lors du téléchargement ou de l'exécution : « SmartScreen Windows Defender a empêché le démarrage d'une application non reconnue. L'exécution de cette application peut mettre votre ordinateur en danger. » Pour l'ouvrir, vous devez obligatoirement cliquer sur « Informations complémentaires » puis sur le bouton « Exécuter quand même » qui apparaît.</p>
         <a href="alron.zip" class="btn btn-primary">Télécharger l'archive</a>
       </div>
       <div class="dl-card reveal">
@@ -354,6 +362,7 @@ Pour l'ouvrir, vous devez obligatoirement cliquer sur « Informations complémen
 </section>
 
 <section class="support" id="soutenir">
+  <canvas id="support-canvas"></canvas>
   <div class="wrap" style="text-align:center;">
     <span class="eyebrow" style="color:var(--gold);">Soutenir le projet</span>
     <h2>Alron est développé et maintenu bénévolement</h2>
@@ -367,7 +376,7 @@ Pour l'ouvrir, vous devez obligatoirement cliquer sur « Informations complémen
     <div class="foot-grid">
       <div>
         <div class="foot-brand"><img src="logo-alron.png" alt="Logo Alron"> Alron</div>
-        <p>Une application pédagogique pensée par et pour les enseignant·es, fonctionnant 100% hors-ligne.</p>
+        <p>Une application pédagogique pensée par et pour les enseignant·es, ne nécessitant pas de connexion Internet au quotidien.</p>
       </div>
       <div>
         <h4>Ressources</h4>
@@ -400,6 +409,91 @@ Pour l'ouvrir, vous devez obligatoirement cliquer sur « Informations complémen
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   },{threshold:.15});
   els.forEach(el=>io.observe(el));
+</script>
+
+<script>
+  // Fond animé — réseau de particules repris tel quel de initNetworkCanvas()
+  // (src/renderer/pages/accueil.js), la page d'accueil de l'application Alron.
+  // Factorisé ici pour être réutilisé sur plusieurs blocs à fond navy du site
+  // (hero, encart notice, section soutenir).
+  function initNetworkCanvas(canvasId){
+    const canvas = document.getElementById(canvasId);
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, nodes, animId;
+    const dotRGB = '110,130,160';
+
+    function resize(){
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+
+    function makeNodes(){
+      const count = Math.max(70, Math.min(160, Math.round((W * H) / 9000)));
+      return Array.from({length: count}, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - .5) * .35,
+        vy: (Math.random() - .5) * .35,
+        r: Math.random() * 2.5 + 1.2,
+        alpha: Math.random() * .5 + .25,
+      }));
+    }
+
+    function draw(){
+      ctx.clearRect(0, 0, W, H);
+      const MAX_DIST = 150;
+      for(let i = 0; i < nodes.length; i++){
+        for(let j = i + 1; j < nodes.length; j++){
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < MAX_DIST){
+            const opacity = (1 - dist / MAX_DIST) * 0.26;
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${dotRGB},${opacity})`;
+            ctx.lineWidth = .8;
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      for(const n of nodes){
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${dotRGB},${n.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    function update(){
+      for(const n of nodes){
+        n.x += n.vx; n.y += n.vy;
+        if(n.x < 0 || n.x > W) n.vx *= -1;
+        if(n.y < 0 || n.y > H) n.vy *= -1;
+      }
+    }
+
+    function loop(){
+      update(); draw();
+      animId = requestAnimationFrame(loop);
+    }
+
+    resize();
+    nodes = makeNodes();
+    loop();
+
+    const ro = new ResizeObserver(() => { resize(); nodes = makeNodes(); });
+    ro.observe(canvas.parentElement);
+  }
+
+  (function(){
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    initNetworkCanvas('constellation-canvas');
+    initNetworkCanvas('notice-canvas');
+    initNetworkCanvas('support-canvas');
+  })();
 </script>
 
 </body>
