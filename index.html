@@ -117,7 +117,7 @@
   .notice-box p{color:#AEB8C4;font-size:14.5px;margin:0;}
 
   .download{background:var(--surface);}
-  .dl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+  .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;}
   .dl-card{background:#fff;border-radius:var(--radius);padding:32px;box-shadow:var(--shadow);}
   .dl-card h3{font-family:var(--font-body);font-weight:700;font-size:16px;color:var(--navy);margin-bottom:6px;}
   .dl-card p{color:var(--text-mid);font-size:14px;margin:0 0 20px;}
@@ -356,13 +356,22 @@
         </div>
         <p>Décompressez l'archive et lancez l'exécutable directement depuis votre clé USB. Un dossier de données est créé automatiquement à côté de l'application.</p>
         <ol class="install-steps">
-          <li>Téléchargez l'archive <code>alron.zip</code> avec le bouton ci-dessous.</li>
+          <li>Téléchargez l'archive <code>Alron.zip</code> avec le bouton ci-dessous.</li>
           <li>Clic droit sur le fichier téléchargé → <b>Extraire tout</b> (ou double-clic selon votre navigateur).</li>
           <li>Ouvrez le dossier extrait et double-cliquez sur <b>alron.exe</b>.</li>
           <li>Windows affiche un écran bleu « L'ordinateur a été protégé » : cliquez sur <b>Informations complémentaires</b>, puis sur <b>Exécuter quand même</b>. Alron s'ouvre.</li>
         </ol>
         <p class="smartscreen-warning"><strong>Pourquoi Windows affiche ce message ?</strong> Alron est une application gratuite et indépendante, développée par un enseignant plutôt que par une grande entreprise. N'étant pas passée par un certificat éditeur payant, elle est classée « non reconnue » par SmartScreen — c'est une question de statut administratif, pas un signe de danger. Des milliers d'applications gratuites et sûres déclenchent le même message. L'étape 4 ci-dessus suffit à l'ouvrir normalement.</p>
-        <a href="alron.zip" class="btn btn-primary">Télécharger l'archive</a>
+        <a href="Alron.zip" class="btn btn-primary">Télécharger l'archive</a>
+      </div>
+      <div class="dl-card reveal">
+        <h3>🧠 Assistant IA locale</h3>
+        <div class="dl-meta">
+          <span class="tag tag-free">100% gratuit</span>
+          <span class="tag">Optionnel</span>
+        </div>
+        <p>Nécessaire uniquement si vous voulez utiliser l'assistant de rédaction d'appréciations. Fichier volumineux hébergé sur Google Drive plutôt que GitHub. Fonctionne hors ligne une fois installé.</p>
+        <a href="https://drive.google.com/file/d/1l4XSmCW0TjCafB9TnqNN635gEGSfvCmg/view?usp=drivesdk" class="btn btn-ghost" style="color:var(--navy);border-color:var(--border);" target="_blank" rel="noopener">Télécharger sur Drive</a>
       </div>
       <div class="dl-card reveal">
         <h3>📜 Licence & confidentialité</h3>
